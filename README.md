@@ -1,3 +1,3 @@
-# React Three Fiber + Vite
+# Shader Template with React Three Fiber + Vite
 
-Easy Template for React Three Fiber
+Template for GLSL Shader with React Three Fiber

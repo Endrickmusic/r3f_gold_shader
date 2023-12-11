@@ -5,7 +5,7 @@ import { Color, Vector2, DoubleSide } from "three";
 import './index.css';
 
 import vertexShader from './shader/vertexShader';
-import fragmentShader from './shader/fragmentShader';
+import fragmentShader from './shader/fragmentShader_01';
 
 const Fragment = () => {
 
@@ -28,10 +28,11 @@ const Fragment = () => {
       },
       u_Resolution: {
         type: "v2",
-        value: new Vector2(4, 3),
+        // value: new Vector2(window.innerWidth, window.innerHeight),
+        value: new Vector2(window.innerWidth, window.innerHeight),
       }
       // ,
-      // iChannel0: {
+      // u_Texture: {
       //   type: "t",
       //   value: noiseTexture,
       // },
@@ -40,7 +41,9 @@ const Fragment = () => {
   );
   return (
     <mesh ref={meshRef} position={[0, 0, 0]} scale={1.0}>
-      <planeGeometry args={[1, 1, 32, 32]} />
+      <planeGeometry 
+      args={[1, 1, 32, 32]} 
+      />
       <shaderMaterial
         uniforms={uniforms}
         fragmentShader={fragmentShader}
