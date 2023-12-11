@@ -5,50 +5,38 @@ import { Color, Vector2, DoubleSide } from "three";
 import './index.css';
 
 import vertexShader from './shader/vertexShader';
-import fragmentShader from './shader/fragmentShader_01';
+import fragmentShader from './shader/fragmentShader';
 
-const Fragment = () => {
+const MovingPlane = () => {
 
   // This reference will give us direct access to the mesh
-  const meshRef = useRef();
-  
-  // Update uTime
-  useFrame((state) => {
-    let time = state.clock.getElapsedTime();
+  const mesh = useRef();
 
-    meshRef.current.material.uniforms.u_Time.value = time;
-  })
-
-  // Define the shader uniforms with memoization to optimize performance
   const uniforms = useMemo(
     () => ({
-      u_Time: {
-        type: "f",
-        value: 1.0,
+      u_time: {
+        value: 0.0,
       },
-      u_Resolution: {
-        type: "v2",
-        // value: new Vector2(window.innerWidth, window.innerHeight),
-        value: new Vector2(window.innerWidth, window.innerHeight),
-      }
-      // ,
-      // u_Texture: {
-      //   type: "t",
-      //   value: noiseTexture,
-      // },
-    }),
-    []
+      u_colorA: { value: new Color("#FFE486") },
+      u_colorB: { value: new Color("#FEB3D9") },
+    }), []
   );
+
+  useFrame((state, delta) => {
+    const { clock } = state;
+    // mesh.current.material.uniforms.u_time.value = clock.getElapsedTime();
+    mesh.current.material.uniforms.u_time.value += delta;
+  });
+
   return (
-    <mesh ref={meshRef} position={[0, 0, 0]} scale={1.0}>
-      <planeGeometry 
-      args={[1, 1, 32, 32]} 
-      />
+    <mesh ref={mesh} position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={1.5}>
+      <planeGeometry args={[1, 1, 64, ]} />
       <shaderMaterial
-        uniforms={uniforms}
         fragmentShader={fragmentShader}
         vertexShader={vertexShader}
-        side={DoubleSide}
+        uniforms={uniforms}
+        wireframe={false}
+        side= {DoubleSide}
       />
     </mesh>
   );
@@ -56,9 +44,9 @@ const Fragment = () => {
 
 const Scene = () => {
   return (
-    <Canvas camera={{ position: [0.0, 0.0, 1.0] }}>
-      <Fragment />
+    <Canvas camera={{ position: [1.0, 1.0, 1.0] }}>
       <OrbitControls />
+      <MovingPlane />
     </Canvas>
   );
 };
