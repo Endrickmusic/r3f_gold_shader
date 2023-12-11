@@ -1,24 +1,64 @@
-import { useState } from 'react'
-import Logo from '/face-blowing-a-kiss.svg'
-import { Canvas } from "@react-three/fiber";
-import { Environment } from "@react-three/drei";
-import Experience from "./Experience";
-import './index.css'
+import { OrbitControls } from "@react-three/drei";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useMemo, useRef } from "react";
+import { Color, Vector2, DoubleSide } from "three";
+import './index.css';
 
-export default function App() {
-  
-  const [count, setCount] = useState(0)
+import vertexShader from './shader/vertexShader';
+import fragmentShader from './shader/fragmentShader';
 
- return (
+const Fragment = () => {
 
+  // This reference will give us direct access to the mesh
+  const meshRef = useRef();
   
-    <Canvas shadows camera={{ position: [0, 0, 2], fov: 40 }}>
-        <color 
-          attach="background" 
-          args={["#aaefef"]} />
-      <Experience />
-    </Canvas>
-  
+  // Update uTime
+  useFrame((state) => {
+    let time = state.clock.getElapsedTime();
+
+    meshRef.current.material.uniforms.u_Time.value = time;
+  })
+
+  // Define the shader uniforms with memoization to optimize performance
+  const uniforms = useMemo(
+    () => ({
+      u_Time: {
+        type: "f",
+        value: 1.0,
+      },
+      u_Resolution: {
+        type: "v2",
+        value: new Vector2(4, 3),
+      }
+      // ,
+      // iChannel0: {
+      //   type: "t",
+      //   value: noiseTexture,
+      // },
+    }),
+    []
   );
-}
+  return (
+    <mesh ref={meshRef} position={[0, 0, 0]} scale={1.0}>
+      <planeGeometry args={[1, 1, 32, 32]} />
+      <shaderMaterial
+        uniforms={uniforms}
+        fragmentShader={fragmentShader}
+        vertexShader={vertexShader}
+        side={DoubleSide}
+      />
+    </mesh>
+  );
+};
 
+const Scene = () => {
+  return (
+    <Canvas camera={{ position: [0.0, 0.0, 1.0] }}>
+      <Fragment />
+      <OrbitControls />
+    </Canvas>
+  );
+};
+
+
+export default Scene;
