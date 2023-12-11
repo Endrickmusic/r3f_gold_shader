@@ -12,9 +12,7 @@ export default function App() {
  return (
 
   
-    <Canvas shadows camera={{ position: [3, 3, 3], fov: 40 }}>
-      <Environment
-        files="./Environments/envmap.hdr" />
+    <Canvas shadows camera={{ position: [0, 0, 2], fov: 40 }}>
         <color 
           attach="background" 
           args={["#aaefef"]} />
