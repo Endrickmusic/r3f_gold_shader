@@ -1,3 +1,3 @@
-# React Three Fiber + Vite
+⚱️⚜️👑 Golden Shader with React Three Fiber + Vite
 
-Easy Template for React Three Fiber
+Golden Shader for React Three Fiber
