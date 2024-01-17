@@ -5,7 +5,7 @@ import { Color, Vector2, DoubleSide } from "three";
 import './index.css';
 
 import vertexShader from './shader/vertexShader';
-import fragmentShader from './shader/fragmentShader_01';
+import fragmentShader from './shader/fragmentShader.js';
 
 const Fragment = () => {
 
@@ -16,7 +16,7 @@ const Fragment = () => {
   useFrame((state) => {
     let time = state.clock.getElapsedTime();
 
-    meshRef.current.material.uniforms.u_Time.value = time;
+    meshRef.current.material.uniforms.u_Time.value += time;
   })
 
   // Define the shader uniforms with memoization to optimize performance
